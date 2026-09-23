@@ -56,3 +56,39 @@ pub fn write_request(file_id : UInt64, offset : UInt64, data : Bytes) -> WriteRe
 pub fn close_request(file_id : UInt64, flags : UInt) -> CloseRequest {
   { file_id, flags }
 }
+///|
+pub fn dialect_name(value : UInt) -> String {
+  match value {
+    0x0202U => "SMB 2.0.2"
+    0x0210U => "SMB 2.1"
+    0x0300U => "SMB 3.0"
+    0x0302U => "SMB 3.0.2"
+    0x0311U => "SMB 3.1.1"
+    _ => "UNKNOWN"
+  }
+}
+
+///|
+pub fn supported_dialects() -> Array[UInt] {
+  [0x0202U, 0x0210U, 0x0300U, 0x0302U, 0x0311U]
+}
+
+///|
+pub fn supports_dialect(value : UInt) -> Bool {
+  match value {
+    0x0202U | 0x0210U | 0x0300U | 0x0302U | 0x0311U => true
+    _ => false
+  }
+}
+
+///|
+pub fn negotiate_choice(offered : Array[UInt]) -> UInt? {
+  let supported = supported_dialects()
+  let mut result : UInt? = None
+  for dialect in supported {
+    for candidate in offered {
+      if dialect == candidate { result = Some(dialect) }
+    }
+  }
+  result
+}
