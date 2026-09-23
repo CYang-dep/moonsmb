@@ -1125,5 +1125,8 @@ test "bounded decoder accessors" {
   let bytes : Bytes = b"\x01\x00\x02\x00"
   assert_true(decode_u16_0(bytes) is Ok(1U))
   assert_true(decode_u16_2(bytes) is Ok(2U))
-  assert_true(decode_u32_1(bytes) is Err(_))
+  match decode_u32_1(bytes) {
+    Err(_) => assert_true(true)
+    Ok(_) => assert_true(false)
+  }
 }
