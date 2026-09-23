@@ -13,7 +13,7 @@ pub fn status_class(status : UInt) -> StatusClass {
     Success
   } else if (status & 0xC0000000U) == 0x40000000U {
     Information
-  } else if (status & 0xC0000000U) == 0x80000000U {
+  } else if (status & 0x80000000U) != 0U {
     Error
   } else {
     Redirection

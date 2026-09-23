@@ -3,43 +3,43 @@
 /// The functions deliberately expose offsets and lengths so callers can compose
 /// them with a transport-specific packet builder.
 pub struct NegotiateBody {
-  pub dialects : Array[UInt]
-  pub security_mode : UInt
-  pub capabilities : UInt
+  dialects : Array[UInt]
+  security_mode : UInt
+  capabilities : UInt
 }
 
 ///|
 pub struct SessionSetupBody {
-  pub flags : UInt
-  pub security_mode : UInt
-  pub capabilities : UInt
-  pub channel : UInt
-  pub token : Bytes
+  flags : UInt
+  security_mode : UInt
+  capabilities : UInt
+  channel : UInt
+  token : Bytes
 }
 
 ///|
 pub struct TreeConnectBody {
-  pub path : String
+  path : String
 }
 
 ///|
 pub struct ReadBody {
-  pub length : UInt
-  pub offset : UInt64
-  pub file_id : FileHandle
+  length : UInt
+  offset : UInt64
+  file_id : FileHandle
 }
 
 ///|
 pub struct WriteBody {
-  pub offset : UInt64
-  pub file_id : FileHandle
-  pub data : Bytes
+  offset : UInt64
+  file_id : FileHandle
+  data : Bytes
 }
 
 ///|
 pub struct CloseBody {
-  pub flags : UInt
-  pub file_id : FileHandle
+  flags : UInt
+  file_id : FileHandle
 }
 
 ///|
@@ -121,12 +121,13 @@ fn append_bytes(out : Array[Byte], value : Bytes) -> Unit {
 pub fn encode_negotiate(value : NegotiateBody) -> Bytes {
   let out = []
   append_u16(out, 36U)
-  append_u16(out, value.dialects.length().to_uint())
+  append_u16(out, value.dialects.length().reinterpret_as_uint())
   append_u16(out, value.security_mode)
   append_u16(out, 0U)
   append_u32(out, value.capabilities)
   append_u32(out, 0U)
   append_u32(out, 0U)
+  append_u64(out, 0UL)
   append_u64(out, 0UL)
   for dialect in value.dialects {
     append_u16(out, dialect)
@@ -143,7 +144,8 @@ pub fn encode_session_setup(value : SessionSetupBody) -> Bytes {
   append_u32(out, value.capabilities)
   append_u32(out, value.channel)
   append_u16(out, 88U)
-  append_u16(out, value.token.length().to_uint())
+  append_u16(out, value.token.length().reinterpret_as_uint())
+  append_u64(out, 0UL)
   append_bytes(out, value.token)
   Bytes::from_array(out)
 }
@@ -155,7 +157,7 @@ pub fn encode_tree_connect(value : TreeConnectBody) -> Bytes {
   append_u16(out, 9U)
   append_u16(out, 0U)
   append_u16(out, 72U)
-  append_u16(out, path.length().to_uint())
+  append_u16(out, path.length().reinterpret_as_uint())
   append_bytes(out, path)
   Bytes::from_array(out)
 }
@@ -173,6 +175,8 @@ pub fn encode_read(value : ReadBody) -> Bytes {
   append_u32(out, 0U)
   append_u32(out, 0U)
   append_u32(out, 0U)
+  append_u32(out, 0U)
+  append_u8(out, 0U)
   Bytes::from_array(out)
 }
 
@@ -181,10 +185,12 @@ pub fn encode_write(value : WriteBody) -> Bytes {
   let out = []
   append_u16(out, 49U)
   append_u16(out, 112U)
-  append_u32(out, value.data.length().to_uint())
+  append_u32(out, value.data.length().reinterpret_as_uint())
   append_u64(out, value.offset)
   append_u64(out, value.file_id.persistent)
   append_u64(out, value.file_id.volatile_id)
+  append_u32(out, 0U)
+  append_u32(out, 0U)
   append_u32(out, 0U)
   append_u32(out, 0U)
   append_bytes(out, value.data)
@@ -212,7 +218,13 @@ fn utf16le(value : String) -> Bytes {
   let out = []
   for ch in value {
     let code = ch.to_int().reinterpret_as_uint()
-    append_u16(out, code)
+    if code <= 0xFFFFU {
+      append_u16(out, code)
+    } else {
+      let scalar = code - 0x10000U
+      append_u16(out, 0xD800U + (scalar >> 10))
+      append_u16(out, 0xDC00U + (scalar & 0x3FFU))
+    }
   }
   Bytes::from_array(out)
 }
