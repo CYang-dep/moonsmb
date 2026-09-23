@@ -1,0 +1,5 @@
+# Third-party and protocol references
+
+MoonSMB is an independent MoonBit implementation based on the public Microsoft MS-SMB2 protocol documentation and interoperability observations from Samba. No Microsoft or Samba source code is copied into this repository.
+
+The SMB2 protocol specification is published by Microsoft Open Specifications. Samba is used only as a behavioral interoperability reference. Their names and marks remain with their respective owners.
