@@ -26,5 +26,12 @@ pub fn command_name(command : Command?) -> String {
 ///|
 pub fn frame_summary(value : Frame) -> String {
   let status_value = status(value.header.status)
-  "SMB2 " + command_name(value.header.command) + " mid=" + value.header.message_id.to_string() + " status=" + status_value.name + " body=" + value.body.length().to_string()
+  "SMB2 " +
+  command_name(value.header.command) +
+  " mid=" +
+  value.header.message_id.to_string() +
+  " status=" +
+  status_value.name +
+  " body=" +
+  value.body.length().to_string()
 }

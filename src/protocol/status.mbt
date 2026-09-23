@@ -5,11 +5,19 @@ pub enum StatusClass {
   Information
   Redirection
   Error
-}
+} derive(Eq, Debug)
 
 ///|
 pub fn status_class(status : UInt) -> StatusClass {
-  if status == 0U { Success } else if (status & 0xC0000000U) == 0x40000000U { Information } else if (status & 0xC0000000U) == 0x80000000U { Error } else { Redirection }
+  if status == 0U {
+    Success
+  } else if (status & 0xC0000000U) == 0x40000000U {
+    Information
+  } else if (status & 0xC0000000U) == 0x80000000U {
+    Error
+  } else {
+    Redirection
+  }
 }
 
 ///|
@@ -32,12 +40,12 @@ pub fn status_name(status : UInt) -> String {
 
 ///|
 pub struct Status {
-  pub code : UInt
-  pub class : StatusClass
-  pub name : String
+  code : UInt
+  class : StatusClass
+  name : String
 }
 
 ///|
 pub fn status(code : UInt) -> Status {
-  { code, class: status_class(code), name: status_name(code) }
+  { code, class: status_class(code), name: status_name(code), }
 }

@@ -1,14 +1,21 @@
 ///|
 /// Little-endian integer reader and safe byte slicing helpers.
 pub fn read_u16(bytes : Bytes, offset : Int) -> UInt? {
-  if offset < 0 || offset + 2 > bytes.length() { None } else {
-    Some(bytes.unsafe_get(offset).to_uint() | (bytes.unsafe_get(offset + 1).to_uint() << 8))
+  if offset < 0 || offset + 2 > bytes.length() {
+    None
+  } else {
+    Some(
+      bytes.unsafe_get(offset).to_uint() |
+      (bytes.unsafe_get(offset + 1).to_uint() << 8),
+    )
   }
 }
 
 ///|
 pub fn read_u32(bytes : Bytes, offset : Int) -> UInt? {
-  if offset < 0 || offset + 4 > bytes.length() { None } else {
+  if offset < 0 || offset + 4 > bytes.length() {
+    None
+  } else {
     let b0 = bytes.unsafe_get(offset).to_uint()
     let b1 = bytes.unsafe_get(offset + 1).to_uint()
     let b2 = bytes.unsafe_get(offset + 2).to_uint()
@@ -27,7 +34,9 @@ pub fn read_u64(bytes : Bytes, offset : Int) -> UInt64? {
 
 ///|
 pub fn slice(bytes : Bytes, offset : Int, length : Int) -> Bytes? {
-  if offset < 0 || length < 0 || offset + length > bytes.length() { None } else {
-    Some(bytes[offset:offset + length])
+  if offset < 0 || length < 0 || offset + length > bytes.length() {
+    None
+  } else {
+    Some(bytes[offset:offset + length].to_owned())
   }
 }

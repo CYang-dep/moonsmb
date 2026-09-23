@@ -19,7 +19,7 @@ pub enum Command {
   QueryInfo
   SetInfo
   OplockBreak
-}
+} derive(Eq, Debug)
 
 ///|
 pub fn Command::from_raw(value : UInt) -> Command? {
@@ -73,23 +73,23 @@ pub fn Command::raw(self : Command) -> UInt {
 ///|
 /// SMB2 protocol header, decoded independently from a command body.
 pub struct Header {
-  pub command : Command?
-  pub command_raw : UInt
-  pub credit_charge : UInt
-  pub status : UInt
-  pub credits : UInt
-  pub flags : UInt
-  pub message_id : UInt64
-  pub tree_id : UInt
-  pub session_id : UInt64
-  pub next_command : UInt
-  pub body_length : UInt
+  command : Command?
+  command_raw : UInt
+  credit_charge : UInt
+  status : UInt
+  credits : UInt
+  flags : UInt
+  message_id : UInt64
+  tree_id : UInt
+  session_id : UInt64
+  next_command : UInt
+  body_length : UInt
 }
 
 ///|
 pub struct Frame {
-  pub header : Header
-  pub body : Bytes
+  header : Header
+  body : Bytes
 }
 
 ///|
