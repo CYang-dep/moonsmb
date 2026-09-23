@@ -1,4 +1,4 @@
-///| 
+///|
 /// SMB2 command identifiers.
 pub enum Command {
   Negotiate
@@ -21,7 +21,7 @@ pub enum Command {
   OplockBreak
 }
 
-///| 
+///|
 pub fn Command::from_raw(value : UInt) -> Command? {
   match value {
     0U => Some(Negotiate)
@@ -46,7 +46,7 @@ pub fn Command::from_raw(value : UInt) -> Command? {
   }
 }
 
-///| 
+///|
 pub fn Command::raw(self : Command) -> UInt {
   match self {
     Negotiate => 0U
@@ -70,7 +70,7 @@ pub fn Command::raw(self : Command) -> UInt {
   }
 }
 
-///| 
+///|
 /// SMB2 protocol header, decoded independently from a command body.
 pub struct Header {
   pub command : Command?
@@ -86,13 +86,13 @@ pub struct Header {
   pub body_length : UInt
 }
 
-///| 
+///|
 pub struct Frame {
   pub header : Header
   pub body : Bytes
 }
 
-///| 
+///|
 pub fn header(
   command_raw : UInt,
   credit_charge : UInt,
@@ -106,12 +106,21 @@ pub fn header(
   body_length : UInt,
 ) -> Header {
   {
-    command: Command::from_raw(command_raw), command_raw, credit_charge, status,
-    credits, flags, message_id, tree_id, session_id, next_command, body_length,
+    command: Command::from_raw(command_raw),
+    command_raw,
+    credit_charge,
+    status,
+    credits,
+    flags,
+    message_id,
+    tree_id,
+    session_id,
+    next_command,
+    body_length,
   }
 }
 
-///| 
+///|
 pub fn frame(header : Header, body : Bytes) -> Frame {
-  { header, body }
+  { header, body, }
 }

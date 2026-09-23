@@ -1,7 +1,11 @@
-///| 
+///|
 /// SMB2 protocol signatures and fixed offsets.
 pub const SMB2_SIGNATURE : Bytes = b"\xFE\x53\x4D\x42"
+
+///|
 pub const HEADER_SIZE : Int = 64
+
+///|
 pub const COMPOUND_ALIGNMENT : UInt = 8U
 
 ///| 

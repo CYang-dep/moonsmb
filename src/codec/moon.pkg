@@ -1,4 +1,3 @@
 import {
   "cyang/moonsmb/src/protocol",
-  "cyang/moonsmb/src/codec",
 }
