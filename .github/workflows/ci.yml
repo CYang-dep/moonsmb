@@ -1,7 +1,12 @@
 name: MoonSMB CI
+
 on:
   push:
   pull_request:
+
+permissions:
+  contents: read
+
 jobs:
   verify:
     runs-on: ubuntu-latest
@@ -13,8 +18,21 @@ jobs:
           curl -fsSL https://cli.moonbitlang.com/install/unix.sh | bash -s latest
           echo "$HOME/.moon/bin" >> "$GITHUB_PATH"
       - name: Show toolchain
-        run: moon version --all
-      - run: moon check
-      - run: moon test
-      - run: moon info
-      - run: moon fmt --check
+        run: |
+          moon version --all
+          moonc -v
+      - name: Check
+        run: moon check --deny-warn
+      - name: Build native
+        run: moon build --target native --deny-warn
+      - name: Test
+        run: moon test --deny-warn
+      - name: Run examples
+        run: |
+          moon run examples/negotiate
+          moon run examples/file-read
+          moon run examples/diagnostic
+      - name: Generate interfaces
+        run: moon info
+      - name: Check formatting
+        run: moon fmt --check
