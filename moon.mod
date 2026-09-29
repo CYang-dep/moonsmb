@@ -1,6 +1,8 @@
-name = "cyang/moonsmb"
+name = "CYang-dep/moonsmb"
 
 version = "0.1.0"
+
+repository = "https://github.com/CYang-dep/moonsmb"
 
 readme = "README.md"
 
