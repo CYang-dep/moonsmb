@@ -124,3 +124,9 @@ pub fn header(
 pub fn frame(header : Header, body : Bytes) -> Frame {
   { header, body, }
 }
+
+///|
+pub extend Command with Eq::{not_equal, equal}
+
+///|
+pub extend Command with @debug.Debug::{to_repr}

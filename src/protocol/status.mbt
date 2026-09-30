@@ -49,3 +49,9 @@ pub struct Status {
 pub fn status(code : UInt) -> Status {
   { code, class: status_class(code), name: status_name(code), }
 }
+
+///|
+pub extend StatusClass with Eq::{not_equal, equal}
+
+///|
+pub extend StatusClass with @debug.Debug::{to_repr}

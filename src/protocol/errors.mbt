@@ -45,3 +45,9 @@ pub fn error_message(error : ProtocolError) -> String {
     UnknownCommand(value) => "unknown SMB2 command: " + value.to_string()
   }
 }
+
+///|
+pub extend ProtocolError with Eq::{not_equal, equal}
+
+///|
+pub extend ProtocolError with @debug.Debug::{to_repr}
